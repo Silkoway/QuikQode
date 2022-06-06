@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>QuikQode</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    
+    <div class="main">
+      <div class="topbar">
+        <img src="img/icon.png" alt="qqicon" class="topbar-icon">
+        
+        <h1 id="title">QuikQode - No File Open</h1>
+
+        <button class="topbar-right-btn minimise">-</button>
+        <button class="topbar-right-btn big">O</button>
+        <button class="topbar-right-btn close">X</button>
+      </div>
+      <div class="command-palette" style="display: none;">
+        <h1>Prompt: </h1>
+        <input type="text" class="cmd-input">
+        <div class="cmd-selector"></div>
+      </div>
+      <h1 id="filename">No File Open</h1>
+      <div class="editor">
+        <div class="window">
+          <textarea spellcheck="false" name="" id="" cols="30" rows="10"></textarea>
+          <div spellcheck="false"></div>
+        </div>
+      </div>
+    </div>
+    <script defer> require('../dist/code.js'); require('../dist/styling.js') </script>
+    
+  </body>
+</html>

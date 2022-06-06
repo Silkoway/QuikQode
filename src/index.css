@@ -1,0 +1,209 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+.main {
+  background: #484848;
+  width: 100vw;
+  height: 100vh;
+}
+
+.topbar {
+  width: 99vw;
+  height: 30px;
+  background: #121212;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-left: 1vw;
+  position: absolute;
+}
+
+.topbar * {
+  -webkit-app-region: none !important;
+}
+
+.topbar #title {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  font-size: 1rem;
+  font-family: Consolas;
+  color: white;
+  -webkit-transform: translate(-50%, 30%);
+          transform: translate(-50%, 30%);
+  margin: 0;
+  -webkit-app-region: drag !important;
+}
+
+.topbar::before {
+  content: "";
+  width: 99vw;
+  height: 30px;
+  -webkit-app-region: drag;
+  position: absolute;
+  z-index: -1000;
+}
+
+.topbar-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.topbar-right-btn {
+  width: 5vw;
+  height: 25px;
+  background: #292929;
+  font-size: 0.7rem;
+  border-radius: 1rem;
+  color: white;
+  position: absolute;
+  right: 0;
+  outline: none;
+  border: none;
+  -webkit-transition: background 0.1s;
+  transition: background 0.1s;
+}
+
+.topbar-right-btn:hover {
+  background: #181818;
+}
+
+.big {
+  -webkit-transform: translateX(-6vw);
+          transform: translateX(-6vw);
+}
+
+.minimise {
+  -webkit-transform: translateX(-12vw);
+          transform: translateX(-12vw);
+}
+
+.editor {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 50px);
+}
+
+.editor > .window {
+  height: calc(100vh - 50px);
+}
+
+.editor > .window > div, .editor > .window > textarea {
+  position: absolute;
+  display: inline-block;
+  padding: 0;
+  border: 0;
+  resize: none;
+  outline: none;
+  width: 100%;
+  top: 30px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 50px);
+  font-family: Consolas;
+  white-space: pre;
+  font-size: 1rem;
+  overflow: auto;
+}
+
+.editor > .window > textarea {
+  background: none;
+  color: rgba(255, 0, 0, 0);
+  caret-color: white;
+  z-index: 2;
+}
+
+.editor > .window > div {
+  pointer-events: none;
+  background: #2b2b2b;
+  color: white;
+}
+
+.command-palette {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  -webkit-transform: translate(-50%);
+          transform: translate(-50%);
+  z-index: 10;
+}
+
+.command-palette > input {
+  outline: none;
+  border: none;
+  padding: 0;
+  background: black;
+  color: white;
+  font-family: Consolas;
+  width: 40vw;
+  height: 4vh;
+  padding: 1rem;
+  font-size: 1.5rem;
+}
+
+.command-palette > input *:focus {
+  outline: none;
+}
+
+.command-palette > .cmd-selector {
+  height: 80vh;
+  overflow-y: auto;
+}
+
+.command-palette > .cmd-selector::-webkit-scrollbar {
+  display: none;
+  /* Safari and Chrome */
+}
+
+.command-palette-item, .command-palette > h1 {
+  border: none;
+  padding: 0;
+  background: black;
+  color: white;
+  font-family: Consolas;
+  width: 40vw;
+  height: 1rem;
+  padding: 1rem;
+  font-size: 1rem;
+  -webkit-transition: background 0.2s;
+  transition: background 0.2s;
+}
+
+.command-palette-item:hover, .command-palette > h1:hover {
+  background: #3f3f3f;
+}
+
+.command-palette > h1 {
+  height: 2rem;
+}
+
+#filename {
+  margin: 0;
+  color: white;
+  position: absolute;
+  font-size: 1rem;
+  top: 35px;
+  left: 1rem;
+  font-family: Consolas;
+}
+
+.comment-line-double-slash, .comment-line-double-dash, comment-line-number-sign, comment-line-percentage {
+  color: #007700;
+  font-style: italic;
+}
+
+.string-quoted-double, .string-quoted-single, .string-quoted-triple, .string-quoted-other {
+  color: #d27722;
+}
+
+.entity-name-function {
+  color: #0073ff;
+}
+/*# sourceMappingURL=index.css.map */

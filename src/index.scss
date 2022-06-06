@@ -1,0 +1,202 @@
+$editor-color: rgb(43, 43, 43);
+$editor-text-color: white;
+$editor-font: Consolas;
+
+body {
+	margin: 0;
+	overflow: hidden;
+}
+
+.main {
+	background: rgb(72, 72, 72);
+	width: 100vw;
+	height: 100vh;
+}
+.topbar {
+	width: 99vw;
+	height: 30px;
+	background: rgb(18, 18, 18);
+
+	* {
+		-webkit-app-region: none !important;
+	}
+
+	#title {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		font-size: 1rem;
+		font-family: $editor-font;
+		color: white;
+		transform: translate(-50%, 30%);
+		margin: 0;
+
+		-webkit-app-region: drag !important;
+	}
+
+	display: flex;
+	align-items: center;
+	padding-left: 1vw;
+	position: absolute;
+
+	&::before {
+		content: "";
+		width: 99vw;
+		height: 30px;
+		-webkit-app-region: drag;
+		position: absolute;
+		z-index: -1000;
+	}
+}
+
+.topbar-icon {
+	width: 20px;
+
+	height: 20px;
+}
+
+.topbar-right-btn {
+	width: 5vw;
+
+	height: 25px;
+	background: rgb(41, 41, 41);
+	font-size: 0.7rem;
+	border-radius: 1rem;
+	color: white;
+	position: absolute;
+	right: 0;
+
+	outline: none;
+
+	border: none;
+
+	transition: background 0.1s;
+
+	&:hover {
+		background: rgb(24, 24, 24);
+	}
+}
+
+.big {
+	transform: translateX(-6vw);
+}
+.minimise {
+	transform: translateX(-12vw);
+}
+
+// Editor
+
+.editor {
+	position: absolute;
+	top: 30px;
+	left: 0;
+	width: 100vw;
+	height: calc(100vh - 50px);
+ 	& > .window {
+		height: calc(100vh - 50px);
+		& > div, & > textarea {
+			position: absolute;
+			display: inline-block;
+			padding: 0;
+			border: 0;
+			resize: none;
+			outline: none;
+			width: 100%;
+			top: 30px;
+			left: 0;
+			width: 100vw;
+			height: calc(100vh - 50px);
+			font-family: $editor-font;
+			white-space: pre;
+			font-size: 1rem;
+			overflow: auto;
+			
+		}
+		& > textarea {
+			background: none;
+			color: rgba(255, 0, 0, 0);
+			caret-color: white;
+			z-index: 2;
+		}
+		& > div {
+			pointer-events: none;
+			background: $editor-color;
+			color: $editor-text-color;
+
+		}
+	}
+}
+
+.command-palette {
+	position: absolute;
+	top: 30px;
+	left: 50%;
+	transform: translate(-50%);
+	z-index: 10;
+	& > input {
+		outline: none;
+		*:focus {outline: none}
+		border: none;
+		padding: 0;
+		background: black;
+		color: white;
+		font-family: $editor-font;
+		width: 40vw;
+		height: 4vh;
+		padding: 1rem;
+		font-size: 1.5rem;
+	}
+
+	& > .cmd-selector {
+		height: 80vh;
+		overflow-y: auto;
+		&::-webkit-scrollbar { 
+			display: none;  /* Safari and Chrome */
+		}
+	}
+
+}
+
+.command-palette-item, .command-palette > h1 {
+	border: none;
+	padding: 0;
+	background: black;
+	color: white;
+	font-family: $editor-font;
+	width: 40vw;
+	height: 1rem;
+	padding: 1rem;
+	font-size: 1rem;
+	transition: background 0.2s;
+
+	&:hover {
+		background: rgb(63, 63, 63);
+	}
+}
+.command-palette > h1 {
+	height: 2rem;
+}
+#filename {
+	margin: 0;
+	color: white;
+	position: absolute;
+	font-size: 1rem;
+	top: 35px;
+	left: 1rem;
+	font-family: $editor-font;
+}
+
+$comment-color: rgb(0, 119, 0);
+$string-color: rgb(210, 119, 34);
+$function-color: rgb(0, 115, 255);
+
+.comment-line-double-slash, .comment-line-double-dash, comment-line-number-sign, comment-line-percentage {
+	color: $comment-color;
+	font-style: italic;
+}
+.string-quoted-double, .string-quoted-single, .string-quoted-triple, .string-quoted-other {
+	color: $string-color;
+}
+.entity-name-function {
+	color: $function-color;
+}
