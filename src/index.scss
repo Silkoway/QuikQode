@@ -5,6 +5,7 @@ $editor-font: Consolas;
 body {
 	margin: 0;
 	overflow: hidden;
+	border-radius: 1rem;
 }
 
 .main {
@@ -105,7 +106,7 @@ body {
 			top: 30px;
 			left: 0;
 			width: 100vw;
-			height: calc(100vh - 50px);
+			height: calc(100vh - 60px);
 			font-family: $editor-font;
 			white-space: pre;
 			font-size: 1rem;
@@ -148,7 +149,7 @@ body {
 	}
 
 	& > .cmd-selector {
-		height: 80vh;
+		height: 70vh;
 		overflow-y: auto;
 		&::-webkit-scrollbar { 
 			display: none;  /* Safari and Chrome */
@@ -169,12 +170,13 @@ body {
 	font-size: 1rem;
 	transition: background 0.2s;
 
-	&:hover {
+	&:hover, &:focus {
 		background: rgb(63, 63, 63);
+		outline: none;
 	}
 }
 .command-palette > h1 {
-	height: 2rem;
+	height: max-content;
 }
 #filename {
 	margin: 0;
@@ -188,9 +190,14 @@ body {
 
 $comment-color: rgb(0, 119, 0);
 $string-color: rgb(210, 119, 34);
+$numeric-color: rgb(175, 102, 0);
 $function-color: rgb(0, 115, 255);
+$control-color: rgb(154, 71, 255);
+$alt-control-color: rgb(117, 202, 255);
+$class-color: rgb(150, 255, 88);
+$operator-color: rgb(130, 53, 255);
 
-.comment-line-double-slash, .comment-line-double-dash, comment-line-number-sign, comment-line-percentage {
+.comment-block, .comment-blockline-double-slash, .comment-line-double-dash, comment-line-number-sign, comment-line-percentage {
 	color: $comment-color;
 	font-style: italic;
 }
@@ -199,4 +206,22 @@ $function-color: rgb(0, 115, 255);
 }
 .entity-name-function {
 	color: $function-color;
+}
+.keyword-control {
+	color: $control-color;
+}
+.keyword-other {
+	color: $alt-control-color;
+}
+.support-function {
+	color: $function-color;
+}
+.support-class {
+	color: $class-color;
+}
+.constant-numeric {
+	color: $numeric-color;
+}
+.keyword-operator {
+	color: $operator-color;
 }

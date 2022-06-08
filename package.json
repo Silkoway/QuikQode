@@ -1,7 +1,7 @@
 {
   "name": "quikqode",
   "productName": "QuikQode",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A code editor made for some fun.",
   "main": "dist/index.js",
   "scripts": {

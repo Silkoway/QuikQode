@@ -1,4 +1,19 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,26 +51,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.jsStyling = exports.Word = void 0;
+exports.QuikPlugin = exports.QuikWord = void 0;
 var remote_1 = require("@electron/remote");
 var fs = require("fs");
 var hidefile = require('hidefile');
-var Word = /** @class */ (function () {
-    function Word(regex, name) {
+var styles_1 = require("../dist/styles");
+var QuikBaseEvent = /** @class */ (function () {
+    function QuikBaseEvent() {
+        this.setStyle = function (newStyle) {
+            styling = newStyle;
+        };
+        this.setTitle = function (newTitle) {
+            title = newTitle;
+        };
+    }
+    return QuikBaseEvent;
+}());
+var QuikFileLoadEvent = /** @class */ (function (_super) {
+    __extends(QuikFileLoadEvent, _super);
+    function QuikFileLoadEvent(filename, filepath) {
+        var _this = _super.call(this) || this;
+        _this.filename = filename;
+        _this.filepath = filepath;
+        return _this;
+    }
+    return QuikFileLoadEvent;
+}(QuikBaseEvent));
+var QuikWord = /** @class */ (function () {
+    function QuikWord(regex, name) {
         this.regex = regex;
         this.name = name;
     }
-    return Word;
+    return QuikWord;
 }());
-exports.Word = Word;
+exports.QuikWord = QuikWord;
+var QuikPlugin = /** @class */ (function () {
+    function QuikPlugin(name, func) {
+        this.name = name;
+        this.load = func.load;
+        this.update = func.update;
+        this.fileload = func.fileload;
+    }
+    return QuikPlugin;
+}());
+exports.QuikPlugin = QuikPlugin;
 // * Builtin styles * //
-exports.jsStyling = [
-    new Word(/(?<=[a-zA-Z][a-zA-Z0-9]*\.)[a-zA-Z][a-zA-Z0-9]*(?=\(.*\))/, 'entity.name.function'),
-    new Word(/\/{2}.*/, 'comment.line.double-slash'),
-    new Word(/"[^"]*"/, 'string.quoted.double'),
-    new Word(/'[^']*'/, 'string.quoted.single'),
-];
-var styling = exports.jsStyling;
+var noStyling = [];
+var styling = noStyling;
 var dialogOpen = false;
 var input = function () { return document.querySelector(".window>textarea"); };
 var editor = function () { return document.querySelector(".window>div"); };
@@ -75,6 +117,9 @@ catch (_a) {
     fs.writeFileSync(remote_1.app.getPath('userData') + '/settings.json', '{ "developerMode": false }');
     developerMode = false;
 }
+var plugins = [
+    styles_1.builtinStyles
+];
 var developerMode = false;
 var filenameText = function () { return document.querySelector('#filename'); };
 var title = 'QuikQode - {filename}{dirty}';
@@ -91,6 +136,7 @@ function parse(text) {
     styling.forEach(function (style) {
         textcopy = textcopy.replace(new RegExp(style.regex, "gm"), "\u5F00".concat(style.name.replace(/\./g, '-').split('').join('分'), "\u95ED$&\u5F00/\u95ED"));
     });
+    textcopy = convertToEscapedHTMLString(textcopy);
     textcopy = textcopy.replace(/开\/闭/g, '</span>');
     var matches = textcopy.match(/开[^开闭]*闭/g);
     (matches !== null && matches !== void 0 ? matches : []).forEach(function (match) {
@@ -103,7 +149,10 @@ input().addEventListener("keydown", function (e) {
 });
 function updateEditor() {
     setTimeout(function () {
-        filename = globalFilePath.replace(/^.*[\\\/]/, '');
+        plugins.forEach(function (plugin) {
+            plugin.update();
+        });
+        filename = globalFilePath.replace(/^.*[\\\/]/, '') === '' ? 'No File Open' : globalFilePath.replace(/^.*[\\\/]/, '');
         editor().innerHTML = parse(input().value);
         filedirty = origfile !== input().value;
         var titlecopy = (' ' + title).slice(1);
@@ -167,6 +216,41 @@ function prompt(str) {
         });
     });
 }
+function alert(str, html) {
+    if (html === void 0) { html = false; }
+    return __awaiter(this, void 0, void 0, function () {
+        var promise;
+        return __generator(this, function (_a) {
+            if (!dialogOpen) {
+                dialogOpen = true;
+                dialogObject().style.display = 'block';
+                dialogInput().value = '';
+                dialogInput().focus();
+                if (!html)
+                    dialogPrompt().textContent = str;
+                else
+                    dialogPrompt().innerHTML = str.replace(/\n/g, '<br>').replace(/\t/, "&emsp;");
+                dialogContent().innerHTML = '';
+                promise = new Promise(function (resolve, reject) {
+                    var promptthing = function (e) {
+                        if (e.key === 'Enter') {
+                            dialogInput().removeEventListener('keydown', promptthing);
+                            resolve('Yes');
+                            dialogObject().style.display = 'none';
+                            dialogOpen = false;
+                        }
+                        if (e.key === 'Escape') {
+                            reject('Escaped');
+                        }
+                    };
+                    dialogInput().addEventListener('keydown', promptthing);
+                });
+                return [2 /*return*/, promise];
+            }
+            return [2 /*return*/];
+        });
+    });
+}
 function saveFile() {
     if (globalFilePath === '') {
         return 1;
@@ -199,6 +283,9 @@ function openFolder() {
             filename = curfiledir.replace(/^.*[\\\/]/, '');
             globalFilePath = curfiledir;
             origfile = input().value;
+            plugins.forEach(function (plugin) {
+                plugin.fileload(new QuikFileLoadEvent(filename, globalFilePath));
+            });
             updateEditor();
         }
         function dirfunc() {
@@ -223,6 +310,9 @@ function openCommandPalette() {
                 filename = filepath.replace(/^.*[\\\/]/, '');
                 globalFilePath = filepath;
                 origfile = input().value;
+                plugins.forEach(function (plugin) {
+                    plugin.fileload(new QuikFileLoadEvent(filename, globalFilePath));
+                });
                 updateEditor();
             } },
         { name: "Save Current File", func: function () {
@@ -258,6 +348,9 @@ function openCommandPalette() {
                             rename = _a.sent();
                             fs.rename(globalFilePath, getCurrentFolderPath() + '/' + rename, function () { });
                             globalFilePath = getCurrentFolderPath() + '/' + rename;
+                            plugins.forEach(function (plugin) {
+                                plugin.fileload(new QuikFileLoadEvent(filename, globalFilePath));
+                            });
                             return [2 /*return*/];
                     }
                 });
@@ -269,6 +362,38 @@ function openCommandPalette() {
                     data.developerMode = !data.developerMode;
                     developerMode = !developerMode;
                     fs.writeFileSync(remote_1.app.getPath('userData') + '/settings.json', JSON.stringify(data));
+                    return [2 /*return*/];
+                });
+            }); } },
+        { name: 'Info', func: function () { return __awaiter(_this, void 0, void 0, function () {
+                var _this = this;
+                return __generator(this, function (_a) {
+                    dialog('What to show?', [
+                        { name: 'Changelog', func: function () { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    alert("\n<h1>Info</h1>\n<h3>QuikQode Dev0.1.0</h3>\nSome feature additions!\n+ Save As Command\n+ Info Command\n<h4>QuikQode Dev0.0.1</h4>\nMinor Fixes:\n+ Editor no longer breaks when editing any type of markup language files.\n<h3>QuikQode Dev0.0.0</h3>\n+ Editing\n+ Minor Syntax Highlighting\n+ Renaming files\n+ Renaming\n+ Built-in file explorer\n\n\t\t\t\t\t", true);
+                                    return [2 /*return*/];
+                                });
+                            }); } },
+                        { name: 'About', func: function () { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    alert("Created by Silkyway. ©Silkyway 2022-2022");
+                                    return [2 /*return*/];
+                                });
+                            }); } }
+                    ]);
+                    return [2 /*return*/];
+                });
+            }); } },
+        { name: 'Save As', func: function () { return __awaiter(_this, void 0, void 0, function () {
+                var filepath;
+                return __generator(this, function (_a) {
+                    filepath = remote_1.dialog.showSaveDialogSync({});
+                    fs.writeFileSync(filepath, input().value);
+                    filename = filepath.replace(/^.*[\\\/]/, '');
+                    globalFilePath = filepath;
+                    origfile = input().value;
+                    updateEditor();
                     return [2 /*return*/];
                 });
             }); } }
@@ -306,4 +431,7 @@ function syncscroll(div) {
 }
 input().addEventListener('scroll', function () { syncscroll(input()); });
 setInterval(function () { syncscroll(input()); }, 10);
+plugins.forEach(function (plugin) {
+    plugin.load();
+});
 //# sourceMappingURL=styling.js.map

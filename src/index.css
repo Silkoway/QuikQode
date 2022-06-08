@@ -1,6 +1,7 @@
 body {
   margin: 0;
   overflow: hidden;
+  border-radius: 1rem;
 }
 
 .main {
@@ -106,7 +107,7 @@ body {
   top: 30px;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 60px);
   font-family: Consolas;
   white-space: pre;
   font-size: 1rem;
@@ -153,7 +154,7 @@ body {
 }
 
 .command-palette > .cmd-selector {
-  height: 80vh;
+  height: 70vh;
   overflow-y: auto;
 }
 
@@ -176,12 +177,15 @@ body {
   transition: background 0.2s;
 }
 
-.command-palette-item:hover, .command-palette > h1:hover {
+.command-palette-item:hover, .command-palette-item:focus, .command-palette > h1:hover, .command-palette > h1:focus {
   background: #3f3f3f;
+  outline: none;
 }
 
 .command-palette > h1 {
-  height: 2rem;
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
 }
 
 #filename {
@@ -194,7 +198,7 @@ body {
   font-family: Consolas;
 }
 
-.comment-line-double-slash, .comment-line-double-dash, comment-line-number-sign, comment-line-percentage {
+.comment-block, .comment-blockline-double-slash, .comment-line-double-dash, comment-line-number-sign, comment-line-percentage {
   color: #007700;
   font-style: italic;
 }
@@ -205,5 +209,29 @@ body {
 
 .entity-name-function {
   color: #0073ff;
+}
+
+.keyword-control {
+  color: #9a47ff;
+}
+
+.keyword-other {
+  color: #75caff;
+}
+
+.support-function {
+  color: #0073ff;
+}
+
+.support-class {
+  color: #96ff58;
+}
+
+.constant-numeric {
+  color: #af6600;
+}
+
+.keyword-operator {
+  color: #8235ff;
 }
 /*# sourceMappingURL=index.css.map */

@@ -10,7 +10,7 @@ if (require("electron-squirrel-startup")) {
 require("@electron/remote/main").initialize();
 
 
-const createWindow = (): void => {
+export const createWindow = (): void => {
 	// Create the browser window.
 	const mainWindow = new BrowserWindow({
 		height: 600,
